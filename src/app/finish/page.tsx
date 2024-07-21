@@ -5,7 +5,7 @@ import { JSX, SVGProps } from "react";
 
 export default function FinishPage() {
   return (
-    <main className="flex flex-col items-center gap-8 py-32">
+    <main className="flex min-h-dvh flex-col items-center gap-8 bg-white py-32">
       <div className="relative mb-6 h-[195px] w-[360px]">
         <Image
           src={"/FinishIcon.svg"}
@@ -38,7 +38,7 @@ export default function FinishPage() {
 기억 속 멜로디, 우리를 춤추게 해`}
       </p>
 
-      <nav className="fixed bottom-0 flex w-full gap-4 bg-gradient-to-t from-background from-90% px-6 py-4">
+      <nav className="fixed bottom-0 flex w-full gap-4 bg-gradient-to-t from-white from-90% px-6 py-4">
         <Button
           className="h-fit w-full rounded-lg border border-primary bg-white py-3 text-[20px] font-semibold leading-[30px] text-primary hover:bg-gray-50"
           asChild
@@ -55,22 +55,3 @@ export default function FinishPage() {
     </main>
   );
 }
-
-const MusicNoteIcon = (
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>,
-) => (
-  <svg xmlns="http://www.w3.org/2000/svg" {...props}>
-    <g clipPath="url(#a)">
-      <path
-        fillRule="evenodd"
-        d="M46.677 8.02a5 5 0 0 1 5.823 4.93V42.5a10 10 0 1 1-5-8.663V22.95l-25 4.168V45c0 .15-.013.295-.038.435a8.75 8.75 0 1 1-4.962-7.093V17.119a5 5 0 0 1 4.177-4.933l25-4.165ZM22.5 22.05l25-4.168V12.95l-25 4.168v4.932Z"
-        clipRule="evenodd"
-      />
-    </g>
-    <defs>
-      <clipPath id="a">
-        <path d="M0 0h60v60H0z" />
-      </clipPath>
-    </defs>
-  </svg>
-);

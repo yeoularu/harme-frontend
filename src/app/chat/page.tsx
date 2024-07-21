@@ -44,7 +44,12 @@ export default function ChatPage() {
   }, [open]);
 
   return (
-    <main className="flex h-dvh flex-col items-center gap-8 pt-32">
+    <main
+      className={cn(
+        "ease-[cubic-bezier(.32, .72, 0, 1)] flex h-dvh flex-col items-center gap-8 pt-32 transition-colors duration-500",
+        open ? "bg-background" : "bg-white",
+      )}
+    >
       <Image
         src={"/ListeningIcon.svg"}
         width={195}
