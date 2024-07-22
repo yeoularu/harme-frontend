@@ -22,15 +22,6 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 
-//   return (
-//     <div>
-//       <p>Microphone: {listening ? "on" : "off"}</p>
-//       <button onClick={SpeechRecognition.startListening}>Start</button>
-//       <button onClick={SpeechRecognition.stopListening}>Stop</button>
-//       <button onClick={resetTranscript}>Reset</button>
-//       <p>{transcript}</p>
-//     </div>
-
 type ChatBubbleProps = Readonly<{
   isSender: boolean;
   message: string;
@@ -90,6 +81,10 @@ export default function Chat() {
   useEffect(() => {
     setIsClient(true);
     handleStartListen();
+
+    return () => {
+      handleStopListen();
+    };
   }, []);
 
   useEffect(() => {
@@ -134,6 +129,7 @@ export default function Chat() {
       className="mx-auto h-fit w-full max-w-[328px] rounded-lg py-3 text-[20px] font-semibold leading-[30px]"
       onClick={() => {
         handleStartListen();
+        messages.length > 0 && setOpen(true);
       }}
     >
       말하기

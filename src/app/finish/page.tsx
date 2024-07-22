@@ -37,7 +37,7 @@ export default function FinishPage() {
 기억 속 멜로디, 우리를 춤추게 해`}
       </p>
 
-      <nav className="fixed bottom-0 flex w-full gap-4 bg-gradient-to-t from-white from-90% px-6 py-4">
+      <nav className="fixed bottom-0 flex w-full max-w-2xl gap-4 bg-gradient-to-t from-white from-90% px-6 py-4">
         <Button
           className="h-fit w-full rounded-lg border border-primary bg-white py-3 text-[20px] font-semibold leading-[30px] text-primary hover:bg-gray-50"
           asChild
