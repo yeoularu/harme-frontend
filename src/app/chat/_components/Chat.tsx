@@ -21,6 +21,7 @@ import { useEffect, useRef, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import "regenerator-runtime";
 
 type ChatBubbleProps = Readonly<{
   isSender: boolean;
@@ -55,7 +56,7 @@ export default function Chat() {
   // test
   useEffect(() => {
     (async () => {
-      console.log(await fetch("/test").then((res) => res.text()));
+      console.log(await fetch("/api/test").then((res) => res.text()));
     })();
 
     let isMounted = true;

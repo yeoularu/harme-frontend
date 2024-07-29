@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 
 export const handlers = [
-  http.get<never, never, string>("/api", () => {
+  http.get<never, never, string>("/api/test", () => {
     return HttpResponse.json("msw test");
   }),
   //   http.get<never, never, User>('https://api.example.com/user', () => {
