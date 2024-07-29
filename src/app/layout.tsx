@@ -1,7 +1,17 @@
 import "./globals.css";
+import { MSWProvider } from "./msw-provider";
 import Providers from "./providers";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+
+if (process.env.NEXT_RUNTIME === "nodejs") {
+  console.log("SERVER LISTEN");
+
+  const { server } = require("../mocks/node");
+  server.listen();
+
+  Reflect.set(fetch, "__FOO", "YES");
+}
 
 const pretendard = localFont({
   src: "./PretendardVariable.woff2",
@@ -22,7 +32,10 @@ export default function RootLayout({
   return (
     <Providers>
       <html lang="ko">
-        <body className={pretendard.className}>{children}</body>
+        <body className={pretendard.className}>
+          {" "}
+          <MSWProvider>{children}</MSWProvider>
+        </body>
       </html>
     </Providers>
   );

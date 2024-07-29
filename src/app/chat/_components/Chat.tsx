@@ -54,6 +54,10 @@ export default function Chat() {
 
   // test
   useEffect(() => {
+    (async () => {
+      console.log(await fetch("/test").then((res) => res.text()));
+    })();
+
     let isMounted = true;
 
     const updateProgress = async () => {
@@ -77,6 +81,8 @@ export default function Chat() {
       isMounted = false;
     };
   }, [messages.length, open]);
+
+  // test
 
   useEffect(() => {
     setIsClient(true);
