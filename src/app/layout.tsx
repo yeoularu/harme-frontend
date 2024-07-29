@@ -1,5 +1,4 @@
 import "./globals.css";
-import { MSWProvider } from "./msw-provider";
 import Providers from "./providers";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -30,13 +29,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Providers>
-      <html lang="ko">
-        <body className={pretendard.className}>
-          {" "}
-          <MSWProvider>{children}</MSWProvider>
-        </body>
-      </html>
-    </Providers>
+    <html lang="ko">
+      <body className={pretendard.className}>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
   );
 }

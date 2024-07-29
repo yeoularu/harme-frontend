@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/drawer";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { fetcher } from "@/lib/fetcher";
 import { cn } from "@/lib/utils";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { MicIcon } from "lucide-react";
@@ -21,7 +22,7 @@ import { useEffect, useRef, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import "regenerator-runtime";
+import useSWR from "swr";
 
 type ChatBubbleProps = Readonly<{
   isSender: boolean;
@@ -54,11 +55,11 @@ export default function Chat() {
   };
 
   // test
-  useEffect(() => {
-    (async () => {
-      console.log(await fetch("/api/test").then((res) => res.text()));
-    })();
+  const { data, error } = useSWR("/api/test", fetcher);
+  console.log(data, error);
 
+  // test
+  useEffect(() => {
     let isMounted = true;
 
     const updateProgress = async () => {
