@@ -7,7 +7,7 @@ import localFont from "next/font/local";
 
 if (
   process.env.NEXT_RUNTIME === "nodejs" &&
-  process.env.VERCEL_ENV !== "production"
+  process.env.NODE_ENV !== "production"
 ) {
   console.log("SERVER LISTEN");
 

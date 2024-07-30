@@ -8,7 +8,10 @@ import { SWRConfig } from "swr";
 let mockingPromise: Promise<boolean> | undefined;
 
 // if we're running in the browser, start the worker
-if (typeof window !== "undefined") {
+if (
+  typeof window !== "undefined" &&
+  process.env.NEXT_PUBLIC_MSW === "enabled"
+) {
   const { worker } = require("../mocks/browser");
   mockingPromise = worker.start();
 }
