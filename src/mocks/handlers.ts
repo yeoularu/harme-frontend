@@ -1,8 +1,24 @@
 import { http, HttpResponse } from "msw";
 
+const musics = [
+  "https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav",
+  "https://www2.cs.uic.edu/~i101/SoundFiles/Fanfare60.wav",
+  "https://www2.cs.uic.edu/~i101/SoundFiles/PinkPanther30.wav",
+  "https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav",
+];
+
 export const handlers = [
   http.get<never, never, string>("/api/test", () => {
     return HttpResponse.json("msw test");
+  }),
+  http.get("/api/music/:id", ({ params }) => {
+    const { id } = params;
+    const idx = Number(id) - 1;
+    if (musics[idx] == undefined) {
+      return HttpResponse.error();
+    }
+
+    return HttpResponse.json(musics[idx]);
   }),
   //   http.get<never, never, User>('https://api.example.com/user', () => {
   //     return HttpResponse.json({

@@ -1,5 +1,6 @@
 "use client";
 
+import { Provider as JotaiProvider } from "jotai";
 import { Suspense, use } from "react";
 import "regenerator-runtime/runtime";
 import { SWRConfig } from "swr";
@@ -44,7 +45,9 @@ export default function Providers({
 }>) {
   return (
     <MSWProvider>
-      <SWRConfig>{children}</SWRConfig>
+      <JotaiProvider>
+        <SWRConfig>{children}</SWRConfig>
+      </JotaiProvider>
     </MSWProvider>
   );
 }

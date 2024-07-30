@@ -1,5 +1,7 @@
+import MusicPlayer from "./_components/MusicPlayer";
 import "./globals.css";
 import Providers from "./providers";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
@@ -31,7 +33,15 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={pretendard.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <MusicPlayer />
+          <Toaster
+            position="top-center"
+            richColors
+            toastOptions={{ classNames: { title: "text-lg" } }}
+          />
+        </Providers>
       </body>
     </html>
   );

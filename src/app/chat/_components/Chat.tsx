@@ -22,7 +22,6 @@ import { useEffect, useRef, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
-import useSWR from "swr";
 
 type ChatBubbleProps = Readonly<{
   isSender: boolean;
@@ -53,10 +52,6 @@ export default function Chat() {
   const handleStopListen = () => {
     SpeechRecognition.stopListening();
   };
-
-  // test
-  const { data, error } = useSWR("/api/test", fetcher);
-  console.log(data, error);
 
   // test
   useEffect(() => {
