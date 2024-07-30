@@ -5,7 +5,10 @@ import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
-if (process.env.NEXT_RUNTIME === "nodejs") {
+if (
+  process.env.NEXT_RUNTIME === "nodejs" &&
+  process.env.VERCEL_ENV !== "production"
+) {
   console.log("SERVER LISTEN");
 
   const { server } = require("../mocks/node");

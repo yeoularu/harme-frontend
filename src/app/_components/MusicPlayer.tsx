@@ -1,14 +1,11 @@
 "use client";
 
+import { musicAtom } from "@/atoms/musicAtom";
 import { Button } from "@/components/ui/button";
 import useMusic from "@/hooks/useMusic";
 import { cn } from "@/lib/utils";
-import {
-  ChevronDown,
-  ChevronUp,
-  ClipboardCheck,
-  ShareIcon,
-} from "lucide-react";
+import { useAtom } from "jotai";
+import { ChevronDown, ClipboardCheck, ShareIcon } from "lucide-react";
 import Image from "next/image";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { useQueryState } from "nuqs";
@@ -17,16 +14,22 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import { toast } from "sonner";
-import useSWR from "swr";
 import { useIsClient } from "usehooks-ts";
 
 export default function MusicPlayer() {
   const isClient = useIsClient();
 
+  const [music, setMusic] = useAtom(musicAtom);
+
   const [musicIdQuery, setMusicIdQuery] = useQueryState("m", {
     history: "push",
   });
   const isFullPlayer = !!musicIdQuery;
+  useEffect(() => {
+    if (musicIdQuery) {
+      setMusic(musicIdQuery);
+    }
+  }, [musicIdQuery, setMusic]);
 
   const playerRef = useRef<AudioPlayer>(null);
 
@@ -101,12 +104,15 @@ export default function MusicPlayer() {
             : `bottom-2 h-24 max-h-24 w-full max-w-80 -translate-x-8 justify-start rounded-lg`,
           isHidden && "hidden",
         )}
-        onClick={musicIdQuery ? undefined : () => setMusicIdQuery(src)}
+        onClick={musicIdQuery ? undefined : () => setMusicIdQuery(music)}
       >
         <Image
           className={cn(
-            "aspect-square rounded-lg object-contain",
+            "animate-custom-fade-in aspect-square rounded-lg object-contain",
             !isFullPlayer && "mr-4",
+            isFullPlayer
+              ? "animate-custom-fade-in"
+              : "animate-custom-fade-out-in",
           )}
           src="/sample.png"
           alt="album"

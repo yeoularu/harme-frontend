@@ -1,21 +1,45 @@
 "use client";
 
 import { musicAtom } from "@/atoms/musicAtom";
-import { useSetAtom } from "jotai";
+import { cn } from "@/lib/utils";
+import { useAtom, useSetAtom } from "jotai";
+import Image from "next/image";
+import { useQueryState } from "nuqs";
 
 export default function SongCard({
   id,
   title,
   ownerName,
 }: Readonly<{ id: string; title: string; ownerName: string }>) {
-  const setMusicAtom = useSetAtom(musicAtom);
+  const [music, setMusic] = useAtom(musicAtom);
+
+  const [_, setMusicIdQuery] = useQueryState("m", {
+    history: "push",
+  });
 
   return (
     <div className="flex flex-col gap-1">
       <div className="relative h-[8.5rem] w-[8.5rem] rounded-lg bg-muted">
         <button
-          onClick={() => setMusicAtom(id)}
-          className="absolute bottom-[0.45rem] left-[0.45rem]"
+          className="absolute inset-0"
+          onClick={() => setMusicIdQuery(id)}
+        >
+          <Image
+            src="/sample.png"
+            fill
+            className="object-contain"
+            alt="album"
+          />
+        </button>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setMusic(id);
+          }}
+          className={cn(
+            "absolute bottom-[0.45rem] left-[0.45rem]",
+            music && id === music && "hidden",
+          )}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
