@@ -7,5 +7,6 @@
     "sonner",
     "tailwindcss",
     "usehooks"
-  ]
+  ],
+  "svg.preview.background": "transparent"
 }

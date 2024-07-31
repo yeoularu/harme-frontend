@@ -21,31 +21,30 @@ export const handlers = [
     return HttpResponse.json(musics[idx]);
   }),
 
-  http.get<never, never, never>(
-    "/api/checkNickName/:nickName",
-    ({ params }) => {
-      const { nickName } = params;
+  // http.get<never, never, never>("/api/duplecate", ({ request }) => {
+  //   const url = new URL(request.url);
 
-      if (nickName === "중복") {
-        return HttpResponse.json(null, { status: 401 });
-      }
+  //   const nickName = url.searchParams.get("nickName");
 
-      return HttpResponse.json(null, { status: 200 });
-    },
-  ),
+  //   if (nickName === "중복") {
+  //     return HttpResponse.json(null, { status: 200 });
+  //   }
 
-  http.post<never, { nickName: string; password: string }, never>(
-    "/api/signup",
-    async ({ request }) => {
-      const { nickName, password } = await request.json();
+  //   return HttpResponse.json(null, { status: 404 });
+  // }),
 
-      if (nickName === "에러") {
-        return HttpResponse.json(null, { status: 401 });
-      }
+  // http.post<never, { nickName: string; password: string }, never>(
+  //   "/api/signup",
+  //   async ({ request }) => {
+  //     const { nickName, password } = await request.json();
 
-      return HttpResponse.json(null, { status: 200 });
-    },
-  ),
+  //     if (nickName === "에러") {
+  //       return HttpResponse.json(null, { status: 401 });
+  //     }
+
+  //     return HttpResponse.json(null, { status: 200 });
+  //   },
+  // ),
   //   http.get<never, never, User>('https://api.example.com/user', () => {
   //     return HttpResponse.json({
   //       firstName: 'Sarah',

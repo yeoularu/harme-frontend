@@ -16,7 +16,6 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { fetcher } from "@/lib/fetcher";
 import { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2Icon } from "lucide-react";
@@ -28,6 +27,11 @@ import { toast } from "sonner";
 import useSWR from "swr";
 import { useDebounceValue, useLocalStorage } from "usehooks-ts";
 import { z } from "zod";
+
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  return res.status;
+};
 
 const formSchema = z.object({
   nickName: z
@@ -67,21 +71,29 @@ export default function Signup() {
   }, [nickNameInputValue, setValue, form]);
 
   const { data, error } = useSWR(
-    debouncedValue.length > 0 ? `/api/checkNickName/${debouncedValue}` : null,
+    debouncedValue.length > 0
+      ? `/api/duplecate?nickName=${debouncedValue}`
+      : null,
     fetcher,
   );
 
   useEffect(() => {
-    if (error) {
+    if (data === 200) {
       form.setError("nickName", {
         message: "중복된 별명입니다. 다른 별명을 입력해주세요.",
+      });
+    } else if (data === 404) {
+      form.clearErrors("nickName");
+    } else if (data) {
+      form.setError("nickName", {
+        message: "별명 확인 중 오류가 발생했습니다. 나중에 다시 시도해주세요.",
       });
     }
     setIsCheckingNickName(false);
   }, [data, error, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (error) {
+    if (data === 200) {
       form.setError("nickName", {
         message: "중복된 별명입니다. 다른 별명을 입력해주세요.",
       });
@@ -102,9 +114,8 @@ export default function Signup() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        form.setError("nickName", {
-          message: errorData.message || "회원가입에 실패했습니다.",
-        });
+        console.error("Error during signup:", errorData);
+        toast.error("문제가 발생했습니다. 나중에 다시 시도해주세요.");
         return;
       }
 
@@ -131,11 +142,13 @@ export default function Signup() {
               {isCheckingNickName && (
                 <Loader2Icon className="ml-1 h-4 w-4 animate-spin text-primary" />
               )}
-              {field.value.length > 0 && !isCheckingNickName && !error && (
-                <p className="text-sm font-medium text-green-500">
-                  사용 가능한 별명입니다.
-                </p>
-              )}
+              {field.value.length > 0 &&
+                !isCheckingNickName &&
+                data === 404 && (
+                  <p className="text-sm font-medium text-green-500">
+                    사용 가능한 별명입니다.
+                  </p>
+                )}
               <FormMessage />
             </FormItem>
           )}
