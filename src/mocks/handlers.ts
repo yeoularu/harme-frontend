@@ -11,15 +11,15 @@ export const handlers = [
   http.get<never, never, string>("/api/test", () => {
     return HttpResponse.json("msw test");
   }),
-  http.get("/api/music/:id", ({ params }) => {
-    const { id } = params;
-    const idx = Number(id) - 1;
-    if (musics[idx] == undefined) {
-      return HttpResponse.error();
-    }
+  // http.get("/api/music/:id", ({ params }) => {
+  //   const { id } = params;
+  //   const idx = Number(id) - 1;
+  //   if (musics[idx] == undefined) {
+  //     return HttpResponse.error();
+  //   }
 
-    return HttpResponse.json(musics[idx]);
-  }),
+  //   return HttpResponse.json(musics[idx]);
+  // }),
 
   // http.get<never, never, never>("/api/duplecate", ({ request }) => {
   //   const url = new URL(request.url);

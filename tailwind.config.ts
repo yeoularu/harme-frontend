@@ -67,19 +67,19 @@ const config = {
           to: { height: "0" },
         },
         "custom-fade-in": {
-          "0%, 30%": { opacity: "0" },
+          "0%, 50%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
         "custom-fade-out-in": {
           "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0" },
+          "30%, 70%": { opacity: "0" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "custom-fade-in": "custom-fade-in 0.5s ease-out forwards",
-        "custom-fade-out-in": "custom-fade-out-in 0.3s ease-out forwards",
+        "custom-fade-out-in": "custom-fade-out-in 0.5s ease-out forwards",
       },
     },
   },

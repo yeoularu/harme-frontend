@@ -1,7 +1,8 @@
 import { musicAtom } from "@/atoms/musicAtom";
-import { fetcher } from "@/lib/fetcher";
 import { useAtomValue } from "jotai";
 import useSWR from "swr";
+
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export default function useMusic() {
   const id = useAtomValue(musicAtom);
@@ -9,9 +10,9 @@ export default function useMusic() {
     id ? `/api/music/${id}` : null,
     fetcher,
   );
+
   // test
-  if (error) {
-    console.error(error);
+  if (data?.error) {
     const musics = [
       "https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav",
       "https://www2.cs.uic.edu/~i101/SoundFiles/Fanfare60.wav",

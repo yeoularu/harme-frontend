@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="mx-auto flex max-w-[360px] flex-col gap-6 px-4 py-8">
+    <main className="mx-auto mb-24 flex max-w-[360px] flex-col gap-6 px-4 py-8">
       <section className="flex flex-col gap-8">
         <p className="typo-headline">홈</p>
         <nav className="flex justify-center gap-4 max-[360px]:flex-col">
