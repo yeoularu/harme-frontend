@@ -18,10 +18,12 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { MicIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import { useLocalStorage } from "usehooks-ts";
 
 type ChatBubbleProps = Readonly<{
   isSender: boolean;
@@ -30,6 +32,15 @@ type ChatBubbleProps = Readonly<{
 
 export default function Chat() {
   const [isClient, setIsClient] = useState(false);
+
+  const [user] = useLocalStorage("user", undefined);
+  const router = useRouter();
+  useEffect(() => {
+    if (!user) {
+      router.replace("/auth/login");
+    }
+  }, [router, user]);
+
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [messages, setMessages] = useState<ChatBubbleProps[]>([]);

@@ -39,7 +39,7 @@ export default function MusicPlayer() {
 
   const segment = useSelectedLayoutSegment();
   useEffect(() => {
-    const hiddenSegments = ["chat"];
+    const hiddenSegments = ["chat", "auth"];
     const isHiddenSegment =
       segment !== null && hiddenSegments.includes(segment);
 
@@ -108,7 +108,7 @@ export default function MusicPlayer() {
       >
         <Image
           className={cn(
-            "animate-custom-fade-in aspect-square rounded-lg object-contain",
+            "aspect-square animate-custom-fade-in rounded-lg object-contain",
             !isFullPlayer && "mr-4",
             isFullPlayer
               ? "animate-custom-fade-in"

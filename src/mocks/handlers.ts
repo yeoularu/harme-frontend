@@ -20,6 +20,32 @@ export const handlers = [
 
     return HttpResponse.json(musics[idx]);
   }),
+
+  http.get<never, never, never>(
+    "/api/checkNickName/:nickName",
+    ({ params }) => {
+      const { nickName } = params;
+
+      if (nickName === "중복") {
+        return HttpResponse.json(null, { status: 401 });
+      }
+
+      return HttpResponse.json(null, { status: 200 });
+    },
+  ),
+
+  http.post<never, { nickName: string; password: string }, never>(
+    "/api/signup",
+    async ({ request }) => {
+      const { nickName, password } = await request.json();
+
+      if (nickName === "에러") {
+        return HttpResponse.json(null, { status: 401 });
+      }
+
+      return HttpResponse.json(null, { status: 200 });
+    },
+  ),
   //   http.get<never, never, User>('https://api.example.com/user', () => {
   //     return HttpResponse.json({
   //       firstName: 'Sarah',
