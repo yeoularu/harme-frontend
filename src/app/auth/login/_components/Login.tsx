@@ -62,7 +62,7 @@ export default function Login() {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/user/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,8 +76,8 @@ export default function Login() {
         toast.error("로그인이 실패했습니다. 별명과 비밀번호를 확인해주세요.");
         return;
       }
-
-      setUser(values);
+      const user = await response.json();
+      setUser(user);
       router.push("/");
     } catch (error) {
       console.error("Error during signup:", error);

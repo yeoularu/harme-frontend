@@ -70,7 +70,7 @@ export default function Signup() {
 
   const { data, error, isLoading } = useSWR(
     nickNameInputValue.length > 0
-      ? `/api/duplicate?nickName=${nickNameInputValue}`
+      ? `/api/user/duplicate?nickName=${nickNameInputValue}`
       : null,
     fetcher,
   );
@@ -101,7 +101,7 @@ export default function Signup() {
     }
 
     try {
-      const response = await fetch("/api/signup", {
+      const response = await fetch("/api/user/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -116,8 +116,8 @@ export default function Signup() {
         return;
       }
 
-      setUser(values);
-      router.push("/");
+      toast.success("회원가입 성공. 로그인하세요.");
+      router.push("/auth/login");
     } catch (error) {
       console.error("Error during signup:", error);
       toast.error("문제가 발생했습니다. 나중에 다시 시도해주세요.");

@@ -7,6 +7,8 @@ const musics = [
   "https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav",
 ];
 
+let intervalCounter = 0;
+
 export const handlers = [
   http.get<never, never, string>("/api/test", () => {
     return HttpResponse.json("msw test");
@@ -18,8 +20,34 @@ export const handlers = [
   //     return HttpResponse.error();
   //   }
 
-  //   return HttpResponse.json(musics[idx]);
+  //   return HttpResponse.json({ src: musics[idx] });
   // }),
+  // http.post<never, never, { id: string }>(
+  //   "/api/music/create",
+  //   async ({ request }) => {
+  //     const data = await request.json();
+  //     console.log(data);
+  //     // const { singerGender } = await request.json();
+  //     // if (singerGender === "남자") {
+  //     //   return HttpResponse.json(null, { status: 404 });
+  //     // }
+
+  //     return HttpResponse.json({ id: "test-song-id" });
+  //   },
+  // ),
+
+  // http.get<never, never, { id: string; musicUrl: string }>(
+  //   "/api/music/create",
+  //   ({ request }) => {
+  //     const url = new URL(request.url);
+  //     const id = url.searchParams.get("id");
+  //     if (intervalCounter < 3) {
+  //       intervalCounter++;
+  //       return HttpResponse.json(null, { status: 404 });
+  //     }
+  //     return HttpResponse.json({ id: "test-song-id", musicUrl: musics[0] });
+  //   },
+  // ),
 
   // http.get<never, never, never>("/api/duplicate", ({ request }) => {
   //   const url = new URL(request.url);

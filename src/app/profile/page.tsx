@@ -4,12 +4,8 @@ import Link from "next/link";
 
 export default function ProfilePage() {
   return (
-    <main className="flex h-dvh flex-col items-center justify-center">
+    <main className="flex min-h-dvh flex-col items-center gap-2">
       <Profile />
-      <p>준비 중</p>
-      <Button asChild>
-        <Link href="/">홈으로</Link>
-      </Button>
     </main>
   );
 }

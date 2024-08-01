@@ -1,4 +1,5 @@
 import MusicPlayer from "./_components/MusicPlayer";
+import NavBar from "./_components/NavBar";
 import "./globals.css";
 import Providers from "./providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -38,7 +39,9 @@ export default function RootLayout({
       <body className={pretendard.className}>
         <Providers>
           {children}
+          <NavBar />
           <MusicPlayer />
+
           <Toaster
             position="top-center"
             richColors

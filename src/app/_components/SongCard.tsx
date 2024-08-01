@@ -10,7 +10,13 @@ export default function SongCard({
   id,
   title,
   ownerName,
-}: Readonly<{ id: string; title: string; ownerName: string }>) {
+  imageUrl,
+}: Readonly<{
+  id: string;
+  title: string;
+  ownerName: string;
+  imageUrl: string;
+}>) {
   const [music, setMusic] = useAtom(musicAtom);
 
   const [_, setMusicIdQuery] = useQueryState("m", {
@@ -22,23 +28,23 @@ export default function SongCard({
       <div className="relative h-[8.5rem] w-[8.5rem] rounded-lg bg-muted">
         <button
           className="absolute inset-0"
-          onClick={() => setMusicIdQuery(id)}
+          onClick={() => setMusicIdQuery(String(id))}
         >
           <Image
-            src="/sample.png"
+            src={imageUrl}
             fill
-            className="object-contain"
+            className="rounded-lg object-contain"
             alt="album"
           />
         </button>
         <button
           onClick={(e) => {
             e.preventDefault();
-            setMusic(id);
+            setMusic(String(id));
           }}
           className={cn(
             "absolute bottom-[0.45rem] left-[0.45rem]",
-            music && id === music && "hidden",
+            music && String(id) === music && "hidden",
           )}
         >
           <svg
