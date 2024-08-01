@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/input-otp";
 import { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2Icon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -49,9 +49,9 @@ const formSchema = z.object({
 
 export default function Signup() {
   const router = useRouter();
-  const [_, setUser] = useLocalStorage<User | undefined>("user", undefined);
+  const [isShow, setIsShow] = useState(false);
 
-  const [isCheckingNickName, setIsCheckingNickName] = useState(false);
+  const [_, setUser] = useLocalStorage<User | undefined>("user", undefined);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,46 +60,43 @@ export default function Signup() {
       password: "",
     },
   });
+  const passwordLength = form.watch("password").length;
 
   const nickNameInputValue = form.watch("nickName");
-  const [debouncedValue, setValue] = useDebounceValue("", 1000);
 
   useEffect(() => {
-    setValue(nickNameInputValue);
     form.clearErrors("nickName");
-    setIsCheckingNickName(nickNameInputValue.length > 0);
-  }, [nickNameInputValue, setValue, form]);
+  }, [nickNameInputValue, form]);
 
-  const { data, error } = useSWR(
-    debouncedValue.length > 0
-      ? `/api/duplecate?nickName=${debouncedValue}`
+  const { data, error, isLoading } = useSWR(
+    nickNameInputValue.length > 0
+      ? `/api/duplicate?nickName=${nickNameInputValue}`
       : null,
     fetcher,
   );
 
   useEffect(() => {
-    if (data === 200) {
+    if (data === 404) {
       form.setError("nickName", {
         message: "중복된 별명입니다. 다른 별명을 입력해주세요.",
       });
-    } else if (data === 404) {
+    } else if (data === 200) {
       form.clearErrors("nickName");
     } else if (data) {
       form.setError("nickName", {
         message: "별명 확인 중 오류가 발생했습니다. 나중에 다시 시도해주세요.",
       });
     }
-    setIsCheckingNickName(false);
   }, [data, error, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (data === 200) {
+    if (data === 404) {
       form.setError("nickName", {
         message: "중복된 별명입니다. 다른 별명을 입력해주세요.",
       });
       return;
     }
-    if (isCheckingNickName) {
+    if (isLoading) {
       return;
     }
 
@@ -139,16 +136,14 @@ export default function Signup() {
               <FormControl>
                 <Input placeholder="별명을 입력해주세요" {...field} />
               </FormControl>
-              {isCheckingNickName && (
+              {isLoading && (
                 <Loader2Icon className="ml-1 h-4 w-4 animate-spin text-primary" />
               )}
-              {field.value.length > 0 &&
-                !isCheckingNickName &&
-                data === 404 && (
-                  <p className="text-sm font-medium text-green-500">
-                    사용 가능한 별명입니다.
-                  </p>
-                )}
+              {field.value.length > 0 && !isLoading && data === 200 && (
+                <p className="text-sm font-medium text-green-500">
+                  사용 가능한 별명입니다.
+                </p>
+              )}
               <FormMessage />
             </FormItem>
           )}
@@ -161,32 +156,77 @@ export default function Signup() {
             <FormItem>
               <FormLabel className="text-xl">비밀번호</FormLabel>
               <FormControl>
-                <InputOTP maxLength={4} {...field}>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                  </InputOTPGroup>
-                </InputOTP>
+                <div className="group relative">
+                  <InputOTP maxLength={4} {...field} className="z-30">
+                    <InputOTPGroup>
+                      <InputOTPSlot
+                        index={0}
+                        className={isShow ? "" : "text-transparent"}
+                      />
+                      <InputOTPSlot
+                        index={1}
+                        className={isShow ? "" : "text-transparent"}
+                      />
+                      <InputOTPSlot
+                        index={2}
+                        className={isShow ? "" : "text-transparent"}
+                      />
+                      <InputOTPSlot
+                        index={3}
+                        className={isShow ? "" : "text-transparent"}
+                      />
+                    </InputOTPGroup>
+                  </InputOTP>
+                  <div className="absolute top-0">
+                    <InputOTP
+                      maxLength={4}
+                      inputMode="text"
+                      pattern="^\*+$"
+                      value={"*".repeat(passwordLength)}
+                      type="text"
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot
+                          index={0}
+                          className={!isShow ? "" : "text-transparent"}
+                        />
+                        <InputOTPSlot
+                          index={1}
+                          className={!isShow ? "" : "text-transparent"}
+                        />
+                        <InputOTPSlot
+                          index={2}
+                          className={!isShow ? "" : "text-transparent"}
+                        />
+                        <InputOTPSlot
+                          index={3}
+                          className={!isShow ? "" : "text-transparent"}
+                        />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute inset-y-0 right-0 z-50 my-auto text-[#C0C0C0] hover:bg-transparent group-hover:text-gray-500"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsShow((v) => !v);
+                    }}
+                  >
+                    {isShow ? <EyeIcon /> : <EyeOffIcon />}
+                  </Button>
+                </div>
               </FormControl>
               <FormDescription>숫자를 입력해주세요.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex items-center justify-between">
-          <Button className="text-base" variant="link" asChild>
-            <Link href="/auth/login">로그인</Link>
-          </Button>
-          <Button
-            className="text-base"
-            type="submit"
-            disabled={isCheckingNickName}
-          >
-            회원가입
-          </Button>
-        </div>
+
+        <Button className="w-full text-base" size="lg" type="submit">
+          회원가입
+        </Button>
       </form>
     </Form>
   );

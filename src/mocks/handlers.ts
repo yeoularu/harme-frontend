@@ -21,7 +21,7 @@ export const handlers = [
   //   return HttpResponse.json(musics[idx]);
   // }),
 
-  // http.get<never, never, never>("/api/duplecate", ({ request }) => {
+  // http.get<never, never, never>("/api/duplicate", ({ request }) => {
   //   const url = new URL(request.url);
 
   //   const nickName = url.searchParams.get("nickName");

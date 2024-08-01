@@ -16,9 +16,16 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { cn } from "@/lib/utils";
+import { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useLocalStorage } from "usehooks-ts";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -36,6 +43,10 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const router = useRouter();
+  const [isShow, setIsShow] = useState(false);
+  const [_, setUser] = useLocalStorage<User | undefined>("user", undefined);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,11 +56,33 @@ export default function Login() {
     },
   });
 
+  const passwordLength = form.watch("password").length;
+
+  console.log(form.watch("password"));
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error during signup:", errorData);
+        toast.error("로그인이 실패했습니다. 별명과 비밀번호를 확인해주세요.");
+        return;
+      }
+
+      setUser(values);
+      router.push("/");
+    } catch (error) {
+      console.error("Error during signup:", error);
+      toast.error("로그인이 실패했습니다. 별명과 비밀번호를 확인해주세요.");
+    }
   }
   return (
     <Form {...form}>
@@ -75,26 +108,83 @@ export default function Login() {
             <FormItem>
               <FormLabel className="text-xl">비밀번호</FormLabel>
               <FormControl>
-                <InputOTP maxLength={4} {...field}>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                  </InputOTPGroup>
-                </InputOTP>
+                <div className="group relative">
+                  <InputOTP maxLength={4} {...field} className="z-30">
+                    <InputOTPGroup>
+                      <InputOTPSlot
+                        index={0}
+                        className={isShow ? "" : "text-transparent"}
+                      />
+                      <InputOTPSlot
+                        index={1}
+                        className={isShow ? "" : "text-transparent"}
+                      />
+                      <InputOTPSlot
+                        index={2}
+                        className={isShow ? "" : "text-transparent"}
+                      />
+                      <InputOTPSlot
+                        index={3}
+                        className={isShow ? "" : "text-transparent"}
+                      />
+                    </InputOTPGroup>
+                  </InputOTP>
+                  <div className="absolute top-0">
+                    <InputOTP
+                      maxLength={4}
+                      inputMode="text"
+                      pattern="^\*+$"
+                      value={"*".repeat(passwordLength)}
+                      type="text"
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot
+                          index={0}
+                          className={!isShow ? "" : "text-transparent"}
+                        />
+                        <InputOTPSlot
+                          index={1}
+                          className={!isShow ? "" : "text-transparent"}
+                        />
+                        <InputOTPSlot
+                          index={2}
+                          className={!isShow ? "" : "text-transparent"}
+                        />
+                        <InputOTPSlot
+                          index={3}
+                          className={!isShow ? "" : "text-transparent"}
+                        />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute inset-y-0 right-0 z-50 my-auto text-[#C0C0C0] hover:bg-transparent group-hover:text-gray-500"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsShow((v) => !v);
+                    }}
+                  >
+                    {isShow ? <EyeIcon /> : <EyeOffIcon />}
+                  </Button>
+                </div>
               </FormControl>
 
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex items-center justify-between">
-          <Button className="text-base" variant="link" asChild>
-            <Link href="/auth/signup">회원가입</Link>
-          </Button>
-          <Button className="text-base" type="submit">
+        <div className="mt-4 flex flex-col items-start gap-2">
+          <Button className="w-full text-base" size="lg" type="submit">
             로그인
+          </Button>
+          <Button
+            variant="link"
+            className="pl-1 text-[#A3A3A3] underline"
+            asChild
+          >
+            <Link href="/auth/signup">회원가입</Link>
           </Button>
         </div>
       </form>
